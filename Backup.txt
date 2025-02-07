@@ -1,0 +1,2105 @@
+Sure! Here's a brief overview of the chronological evolution of Hadoop architecture:
+
+2002: The journey began with the Apache Nutch project. Doug Cutting and Mike Cafarella were working on a web search engine that could crawl and index websites. However, the project was too expensive to scale1.
+
+2003: Google released a paper on the Google File System (GFS), which provided a solution for storing large datasets in a distributed environment1.
+
+2004: Inspired by GFS, Nutch developers created the Nutch Distributed File System (NDFS). Google also introduced MapReduce, a programming model for processing large datasets1.
+
+2006: The Apache community recognized the potential of NDFS and MapReduce beyond web search. They formed an independent subproject called Hadoop. Doug Cutting joined Yahoo to scale Hadoop to thousands of nodes1.
+
+2007: Yahoo started using Hadoop on a 1000-node cluster1.
+
+2008: Hadoop became a top-level project at Apache. It also set a record by sorting a terabyte of data faster than supercomputers1.
+
+2010: Hadoop 0.20.2 was released, introducing Hadoop Distributed File System (HDFS) and MapReduce 1.02.
+
+2012: Hadoop 2.0 introduced YARN (Yet Another Resource Negotiator), which improved resource management and scalability2.
+
+2013: Hadoop 2.2.0 was released, marking the general availability of YARN2.
+
+2017: Hadoop 3.0 introduced significant improvements, including support for erasure coding in HDFS, which reduces storage overhead2.
+
+2020: Hadoop 3.3.0 was released, bringing enhancements like GPU support and improved scalability2.
+
+Hadoop has evolved significantly over the years, becoming a cornerstone of big data processing. If you have any specific questions about any of these stages, feel free to ask!
+
+
+Certainly! Here's an overview of the Hadoop v2 (YARN) architecture and its key components:
+
+Hadoop v2 (YARN) Architecture
+YARN (Yet Another Resource Negotiator) is a core component of Hadoop v2, designed to improve resource management and job scheduling. The architecture separates resource management and job scheduling/monitoring into distinct components.
+
+Key Components of YARN:
+ResourceManager (RM):
+
+Scheduler: Allocates resources to various running applications based on constraints like capacities and queues. It does not monitor or track the status of applications.
+ApplicationsManager: Manages job submissions, negotiates the first container for executing the ApplicationMaster, and handles restarting the ApplicationMaster on failure.
+NodeManager (NM):
+
+Runs on each node in the cluster.
+Manages containers, monitors their resource usage (CPU, memory, disk, network), and reports to the ResourceManager.
+ApplicationMaster (AM):
+
+A per-application component responsible for negotiating resources from the ResourceManager and working with the NodeManager to execute and monitor tasks.
+Each application has its own ApplicationMaster.
+Containers:
+
+The basic unit of resource allocation in YARN.
+Encapsulates a fixed amount of resources (CPU, memory, etc.) and is managed by the NodeManager.
+How YARN Works:
+Job Submission: A client submits a job to the ResourceManager.
+Resource Allocation: The ResourceManager allocates a container for the ApplicationMaster.
+ApplicationMaster Execution: The ApplicationMaster negotiates resources from the ResourceManager and coordinates with NodeManagers to execute tasks.
+Task Execution: NodeManagers launch containers to execute tasks as directed by the ApplicationMaster.
+Monitoring and Reporting: NodeManagers monitor resource usage and report back to the ResourceManager.
+YARN's architecture allows Hadoop to support a wide range of distributed applications beyond MapReduce, making it more versatile and scalable
+
+
+Here are the primary differences between Hadoop version 2 and Hadoop version 3:
+
+Java Version:
+
+Hadoop 2.x: Requires Java 7.
+Hadoop 3.x: Requires Java 81.
+Fault Tolerance:
+
+Hadoop 2.x: Uses replication for fault tolerance, which involves creating multiple copies of data blocks.
+Hadoop 3.x: Introduces erasure coding, which reduces storage overhead by creating parity blocks instead of full replicas12.
+Storage Overhead:
+
+Hadoop 2.x: Has a storage overhead of 200% due to the replication factor of three.
+Hadoop 3.x: Reduces storage overhead to 50% with erasure coding12.
+YARN Timeline Service:
+
+Hadoop 2.x: Uses Timeline Service v1, which has scalability issues.
+Hadoop 3.x: Introduces Timeline Service v2, which is more scalable and reliable12.
+Default Ports:
+
+Hadoop 2.x: Some default ports fall within the Linux ephemeral port range, causing potential conflicts.
+Hadoop 3.x: Default ports have been moved out of the ephemeral range to avoid conflicts1.
+HDFS Balancer:
+
+Hadoop 2.x: Uses HDFS balancer for data balancing.
+Hadoop 3.x: Introduces an intra-data node balancer, which is more efficient1.
+GPU Support:
+
+Hadoop 2.x: Does not support GPUs.
+Hadoop 3.x: Adds support for GPUs, enhancing performance for certain workloads2.
+Compatibility:
+
+Hadoop 2.x: Compatible with HDFS, FTP, Amazon S3, and Windows Azure Storage Blobs.
+Hadoop 3.x: Adds support for Microsoft Azure Data Lake filesystem1.
+These improvements in Hadoop 3.x make it more efficient, scalable, and versatile compared to Hadoop 2.x. If you have any specific questions about these differences, feel free to ask!
+
+
+Hive Architecture
+Hive is a data warehousing solution built on top of Hadoop. It provides a way to query and manage large datasets stored in Hadoop's HDFS using a SQL-like language called HiveQL.
+
+Key Components of Hive:
+User Interface (UI):
+
+Hive CLI: Command Line Interface for executing Hive queries and commands.
+Hive Web UI: A web-based GUI for executing Hive queries and commands.
+Thrift Server: Allows clients to submit requests using various programming languages.
+Driver:
+
+Receives queries from the UI.
+Manages session handles and provides execute and fetch APIs modeled on JDBC/ODBC interfaces.
+Compiler:
+
+Parses the query and performs semantic analysis.
+Generates an execution plan with the help of metadata from the Metastore.
+Metastore:
+
+Stores metadata about tables, partitions, columns, and their types.
+Includes information about serializers and deserializers needed to read and write data, and the corresponding HDFS files where the data is stored.
+Execution Engine:
+
+Executes the execution plan created by the Compiler.
+Manages dependencies between different stages of the plan and executes them on the appropriate system components.
+How Hive Works:
+Query Submission: A user submits a query through the UI.
+Query Parsing: The Driver receives the query and sends it to the Compiler.
+Metadata Retrieval: The Compiler retrieves metadata from the Metastore.
+Execution Plan Generation: The Compiler generates an execution plan, which is a Directed Acyclic Graph (DAG) of stages.
+Task Execution: The Execution Engine executes the tasks in the order of their dependencies.
+Result Retrieval: The results are fetched and returned to the user through the UI.
+This architecture allows Hive to efficiently manage and query large datasets stored in Hadoop, providing a powerful tool for data analysis.
+
+
+
+What is Hive Metastore?
+The Hive Metastore is a central repository that stores metadata for Hive tables and partitions. This metadata includes information about the schema, location, and other attributes of the data stored in Hive. The Metastore is crucial for the functioning of Hive as it allows the system to manage and query large datasets efficiently.
+
+Key Functions of Hive Metastore:
+Schema Information: Stores details about tables, columns, data types, and table properties.
+Location Information: Keeps track of where the data is stored in HDFS or other storage systems.
+Partition Information: Manages metadata about table partitions, which helps in optimizing query performance.
+Serialization/Deserialization: Contains information about how data is read from and written to storage.
+Configuring HBase as Hive Metastore
+Yes, HBase can be configured as a backend for the Hive Metastore. This setup can be beneficial for leveraging HBase's scalability and performance characteristics. Here are the general steps to configure HBase as the Hive Metastore:
+
+Install HBase: Ensure that HBase is installed and running in your Hadoop cluster.
+Configure Hive: Modify the Hive configuration files to point to HBase as the Metastore.
+Set Connection Parameters: Update the hive-site.xml file with the necessary JDBC connection parameters for HBase.
+Initialize Metastore Schema: Use the schematool utility to initialize the Metastore schema in HBase.
+Example Configuration in hive-site.xml:
+<property>
+  <name>javax.jdo.option.ConnectionURL</name>
+  <value>jdbc:hbase://localhost:2181/hivemetastore</value>
+  <description>JDBC connect string for a JDBC metastore</description>
+</property>
+<property>
+  <name>javax.jdo.option.ConnectionDriverName</name>
+  <value>org.apache.hadoop.hive.hbase.HBaseDriver</value>
+  <description>Driver class name for a JDBC metastore</description>
+</property>
+<property>
+  <name>javax.jdo.option.ConnectionUserName</name>
+  <value>hive</value>
+  <description>Username to use against metastore database</description>
+</property>
+<property>
+  <name>javax.jdo.option.ConnectionPassword</name>
+  <value>hive</value>
+  <description>Password to use against metastore database</description>
+</property>
+This configuration allows Hive to use HBase as the Metastore, enabling efficient metadata management and scalability12.
+
+
+
+
+6. Write a note on supported File format types in Hive
+Hive supports several file formats, each with its own advantages and use cases. Here are the primary file formats supported in Hive:
+
+Text File:
+
+Description: The default storage format in Hive. Data is stored in plain text, with each line representing a record.
+Use Case: Simple and widely compatible, suitable for small datasets and easy data interchange.
+Example: CREATE TABLE my_table (...) STORED AS TEXTFILE;
+Sequence File:
+
+Description: A binary format that stores data in key-value pairs. It is splittable and supports compression.
+Use Case: Efficient for large datasets, especially when merging multiple files.
+Example: CREATE TABLE my_table (...) STORED AS SEQUENCEFILE;
+RCFile (Record Columnar File):
+
+Description: A columnar storage format that offers high compression rates and efficient read performance.
+Use Case: Suitable for read-heavy operations and scenarios requiring high compression.
+Example: CREATE TABLE my_table (...) STORED AS RCFILE;
+Avro:
+
+Description: A row-based storage format that supports schema evolution and data serialization.
+Use Case: Ideal for data interchange between different systems and languages.
+Example: CREATE TABLE my_table (...) STORED AS AVRO;
+ORC (Optimized Row Columnar):
+
+Description: A highly efficient columnar storage format that provides high compression and fast read performance.
+Use Case: Best for read-heavy operations and large datasets requiring efficient storage.
+Example: CREATE TABLE my_table (...) STORED AS ORC;
+Parquet:
+
+Description: A columnar storage format that supports efficient data compression and encoding schemes.
+Use Case: Suitable for complex data types and large-scale data processing.
+Example: CREATE TABLE my_table (...) STORED AS PARQUET;
+These file formats allow Hive to handle a wide range of data processing needs, from simple text files to highly optimized columnar storage formats123.
+
+
+7. List any three File formats supported by Hive. Briefly explain any one among three.
+
+Sure! Here are three file formats supported by Hive:
+
+Text File
+ORC (Optimized Row Columnar)
+Parquet
+Brief Explanation of ORC (Optimized Row Columnar):
+ORC (Optimized Row Columnar) is a highly efficient columnar storage format in Hive. It is designed to improve the performance of read-heavy operations and provide high compression rates. Here are some key features of ORC:
+
+Columnar Storage: Data is stored in a columnar format, which allows for efficient data retrieval and compression.
+Compression: ORC supports various compression algorithms like Zlib, Snappy, and LZO, which significantly reduce storage space.
+Predicate Pushdown: ORC allows for predicate pushdown, which means that only the necessary data is read from the disk, improving query performance.
+Indexing: ORC files include lightweight indexes that help in quickly locating the required data without scanning the entire file.
+Use Case: ORC is ideal for scenarios where read performance and storage efficiency are critical, such as data warehousing and analytics.
+
+Example of creating a table with ORC format:
+
+CREATE TABLE my_table (
+  id INT,
+  name STRING,
+  age INT
+) STORED AS ORC;
+If you have any more questions or need further details, feel free to ask!
+
+
+8. What is bucketing in Hive? List any two benefits of bucketing Table? Write an example 
+to create a Bucketed Table in Hive
+What is Bucketing in Hive?
+Bucketing in Hive is a technique used to divide data into more manageable parts, called buckets, based on the hash value of a particular column. This helps in organizing and optimizing data storage and retrieval. Each bucket is stored as a separate file in the underlying file system.
+
+Benefits of Bucketing:
+Improved Query Performance:
+
+Bucketing allows for more efficient data retrieval by reducing the amount of data scanned during query execution. This is particularly useful for queries that involve joins and aggregations.
+Efficient Sampling:
+
+Bucketing enables efficient sampling of data, which is useful for testing and debugging queries on a subset of data without scanning the entire dataset.
+Example of Creating a Bucketed Table in Hive:
+Here's an example of how to create a bucketed table in Hive:
+
+CREATE TABLE employee (
+  id INT,
+  name STRING,
+  age INT,
+  department STRING
+)
+CLUSTERED BY (department) INTO 4 BUCKETS
+STORED AS ORC;
+In this example:
+
+The employee table is bucketed by the department column.
+The data is divided into 4 buckets.
+The table is stored in the ORC file format.
+If you have any more questions or need further details, feel free to ask!
+
+
+9. Using an example, depict how MapReduce computes word count.
+
+Sure! Let's go through an example of how MapReduce computes word count. MapReduce is a programming model used for processing large datasets in a distributed environment. It consists of two main phases: the Map phase and the Reduce phase.
+
+Example: Word Count
+Let's say we have the following input text file:
+
+Hello world
+Hello Hadoop
+Hello MapReduce
+Map Phase:
+Input Splitting: The input file is split into smaller chunks, and each chunk is processed by a separate mapper.
+Mapping: Each mapper processes a chunk of the input file and generates key-value pairs. In this case, each word is treated as a key, and the value is the count (1).
+Mapper Output:
+
+(Hello, 1)
+(world, 1)
+(Hello, 1)
+(Hadoop, 1)
+(Hello, 1)
+(MapReduce, 1)
+Shuffle and Sort Phase:
+The intermediate key-value pairs generated by the mappers are shuffled and sorted by key. This ensures that all values associated with the same key are grouped together.
+
+Shuffled and Sorted Output:
+
+(Hello, [1, 1, 1])
+(Hadoop, [1])
+(MapReduce, [1])
+(world, [1])
+Reduce Phase:
+Reducing: Each reducer processes the grouped key-value pairs and aggregates the values. In this case, the reducer sums the counts for each word.
+Reducer Output:
+
+(Hello, 3)
+(Hadoop, 1)
+(MapReduce, 1)
+(world, 1)
+Final Output:
+The final output is a list of words and their corresponding counts:
+
+Hello 3
+Hadoop 1
+MapReduce 1
+world 1
+Pseudo Code:
+Here is a simple pseudo code for the Map and Reduce functions:
+
+Mapper Function:
+
+def mapper(key, value):
+    for word in value.split():
+        emit(word, 1)
+Reducer Function:
+
+def reducer(key, values):
+    total = sum(values)
+    emit(key, total)
+In this example, the mapper function splits the input text into words and emits each word with a count of 1. The reducer function sums the counts for each word and emits the final word count.
+
+If you have any more questions or need further details, feel free to ask!
+
+
+10. Draw Spark architecture and explain its various components
+Let's go through the Spark architecture and its components in detail:
+
+Spark Architecture
+Apache Spark is a unified analytics engine for large-scale data processing. It provides high-level APIs in Java, Scala, Python, and R, and an optimized engine that supports general execution graphs. The architecture of Spark consists of several key components:
+
+Key Components of Spark:
+Driver Program:
+
+The driver program runs the main function of the application and creates the SparkContext.
+It is responsible for converting user code into a directed acyclic graph (DAG) of tasks to be executed by the cluster.
+Cluster Manager:
+
+Manages the cluster resources and schedules tasks.
+Spark supports various cluster managers, including Standalone, Apache Mesos, and Hadoop YARN.
+Worker Nodes:
+
+Worker nodes are the machines in the cluster that execute the tasks assigned by the driver.
+Each worker node runs an executor, which is responsible for executing tasks and storing data.
+Executors:
+
+Executors are distributed agents that run on worker nodes.
+They execute tasks and keep data in memory or disk storage.
+Executors communicate with the driver program to report the status of tasks.
+Tasks:
+
+Tasks are the smallest units of work in Spark.
+Each task is a part of a stage, and stages are parts of the job.
+Tasks are executed by the executors on the worker nodes.
+How Spark Works:
+Job Submission: The driver program submits a job to the SparkContext.
+DAG Creation: The SparkContext converts the user code into a DAG of stages.
+Task Scheduling: The DAG is divided into tasks, which are scheduled by the cluster manager.
+Task Execution: Executors on the worker nodes execute the tasks.
+Result Collection: The results of the tasks are collected and sent back to the driver program.
+This architecture allows Spark to efficiently process large-scale data in a distributed environment, providing high performance and scalability.
+
+If you have any specific questions about any of these components or how they interact, feel free to ask!
+
+
+
+
+
+
+11. Write a note on RDD, DAG in Spark
+
+RDD (Resilient Distributed Dataset)
+Resilient Distributed Dataset (RDD) is the fundamental data structure of Apache Spark. It is an immutable, distributed collection of objects that can be processed in parallel across a cluster. RDDs provide fault tolerance and are designed to handle large-scale data processing.
+
+Key Features of RDD:
+Immutability: Once created, RDDs cannot be changed. Any transformation on an RDD results in a new RDD.
+Fault Tolerance: RDDs are fault-tolerant through lineage information, which allows them to be recomputed in case of node failures.
+Lazy Evaluation: Transformations on RDDs are not executed immediately. Instead, they are recorded as a lineage of transformations, which are executed only when an action is called.
+Partitioning: RDDs are divided into partitions, which can be processed in parallel across the cluster.
+In-Memory Computation: RDDs can be cached in memory, allowing for faster data retrieval and processing.
+Example of RDD Operations:
+# Creating an RDD from a text file
+rdd = sc.textFile("hdfs://path/to/file.txt")
+
+# Applying transformations
+words = rdd.flatMap(lambda line: line.split(" "))
+word_counts = words.map(lambda word: (word, 1)).reduceByKey(lambda a, b: a + b)
+
+# Performing an action
+word_counts.collect()
+DAG (Directed Acyclic Graph)
+Directed Acyclic Graph (DAG) is a key concept in Spark that represents the sequence of computations performed on RDDs. When a user applies transformations to RDDs, Spark constructs a DAG of stages, where each stage consists of a set of tasks that can be executed in parallel.
+
+Key Features of DAG:
+Stages: The DAG is divided into stages, where each stage contains tasks that can be executed in parallel. Stages are separated by shuffle operations.
+Task Scheduling: The DAG scheduler schedules tasks based on the dependencies between stages. Tasks within a stage are executed in parallel.
+Fault Tolerance: The DAG allows Spark to recompute lost data by tracing the lineage of transformations.
+Example of DAG:
+Consider the following sequence of operations:
+
+rdd = sc.textFile("hdfs://path/to/file.txt")
+words = rdd.flatMap(lambda line: line.split(" "))
+word_pairs = words.map(lambda word: (word, 1))
+word_counts = word_pairs.reduceByKey(lambda a, b: a + b)
+word_counts.collect()
+In this example, the DAG would consist of the following stages:
+
+Stage 1: Read the text file and split lines into words (flatMap).
+Stage 2: Map words to key-value pairs (map).
+Stage 3: Reduce key-value pairs by key (reduceByKey).
+Stage 4: Collect the results (collect).
+The DAG scheduler would execute these stages in the correct order, ensuring efficient and fault-tolerant data processing.
+
+12. What is persist() in Spark? List and brief about different persistence levels.
+What is persist() in Spark?
+The persist() method in Spark is used to store the intermediate results of an RDD (Resilient Distributed Dataset) or DataFrame across multiple operations. This helps in improving the performance of iterative algorithms and complex workflows by avoiding the need to recompute the entire lineage of transformations each time an action is performed.
+
+When you persist a dataset, each node stores its partitioned data in memory or disk, depending on the specified storage level. This allows Spark to reuse the cached data in subsequent actions, reducing computation time and resource usage.
+
+Different Persistence Levels
+Spark provides several storage levels for persisting data, each with its own trade-offs in terms of memory usage, CPU efficiency, and I/O behavior. Here are the main persistence levels:
+
+MEMORY_ONLY:
+
+Description: Stores RDD as deserialized Java objects in the JVM. If the data does not fit in memory, some partitions will not be cached and will be recomputed when needed.
+Use Case: Suitable for datasets that fit entirely in memory and are accessed frequently.
+MEMORY_AND_DISK:
+
+Description: Stores RDD as deserialized Java objects in memory. If the data does not fit in memory, the partitions are stored on disk.
+Use Case: Useful for datasets that do not fit entirely in memory but are still accessed frequently.
+MEMORY_ONLY_SER:
+
+Description: Stores RDD as serialized Java objects (one-byte array per partition) in memory. This reduces memory usage but increases CPU overhead for serialization and deserialization.
+Use Case: Suitable for datasets that need to be cached in memory but have high memory usage.
+MEMORY_AND_DISK_SER:
+
+Description: Stores RDD as serialized Java objects in memory and on disk if the data does not fit in memory.
+Use Case: Useful for datasets that do not fit in memory and have high memory usage.
+DISK_ONLY:
+
+Description: Stores RDD only on disk.
+Use Case: Suitable for datasets that are too large to fit in memory and are accessed infrequently.
+OFF_HEAP:
+
+Description: Stores RDD in off-heap memory (outside the JVM heap). This requires additional configuration and is useful for avoiding garbage collection overhead.
+Use Case: Suitable for large datasets that need to be cached in memory but require efficient memory management.
+Example of Using persist():
+from pyspark import SparkContext
+from pyspark.storagelevel import StorageLevel
+
+sc = SparkContext("local", "Persist Example")
+
+# Create an RDD
+rdd = sc.parallelize([1, 2, 3, 4, 5])
+
+# Persist the RDD in memory and disk
+rdd.persist(StorageLevel.MEMORY_AND_DISK)
+
+# Perform an action on the persisted RDD
+result = rdd.collect()
+print(result)
+In this example, the RDD is persisted using the MEMORY_AND_DISK storage level, which stores the data in memory and spills to disk if necessary.
+
+13. What is cap theorem? Where does MongoDB stands in cap theorem?
+What is CAP Theorem?
+The CAP Theorem, also known as Brewer's theorem, is a principle in distributed systems that states it is impossible for a distributed data store to simultaneously provide all three of the following guarantees:
+
+Consistency (C):
+
+Every read receives the most recent write or an error. This ensures that all nodes in a distributed system have the same view of the data at the same time.
+Availability (A):
+
+Every request receives a response, without guarantee that it contains the most recent write. This ensures that the system remains operational and responsive to user requests, even in the presence of failures.
+Partition Tolerance (P):
+
+The system continues to operate despite an arbitrary number of messages being dropped (or delayed) by the network between nodes. This ensures that the system can handle network partitions and continue functioning.
+According to the CAP theorem, a distributed system can only provide two out of the three guarantees at any given time. This means that in the presence of a network partition, the system must choose between consistency and availability21.
+
+Where Does MongoDB Stand in CAP Theorem?
+MongoDB is a popular NoSQL database that is designed to be highly scalable and flexible. In the context of the CAP theorem, MongoDB prioritizes partition tolerance (P) and availability (A), while allowing for eventual consistency. This means that MongoDB is designed to remain operational and responsive even in the presence of network partitions, but it may not always provide the most recent data immediately.
+
+Key Points:
+Partition Tolerance (P): MongoDB is designed to handle network partitions and continue functioning, ensuring that the system remains available.
+Availability (A): MongoDB ensures that every request receives a response, even if some nodes are unavailable or there are network issues.
+Eventual Consistency: MongoDB allows for eventual consistency, meaning that while the system may not always provide the most recent data immediately, it will eventually become consistent as updates propagate through the system34.
+This design choice makes MongoDB suitable for applications where high availability and partition tolerance are critical, and where eventual consistency is acceptable.
+
+
+14. Draw spark architecture and explain its various components.
+No problem! Let's go through the Spark architecture and its components in detail:
+
+Spark Architecture
+Apache Spark is a unified analytics engine for large-scale data processing. It provides high-level APIs in Java, Scala, Python, and R, and an optimized engine that supports general execution graphs. The architecture of Spark consists of several key components:
+
+Key Components of Spark:
+Driver Program:
+
+The driver program runs the main function of the application and creates the SparkContext.
+It is responsible for converting user code into a directed acyclic graph (DAG) of tasks to be executed by the cluster.
+Cluster Manager:
+
+Manages the cluster resources and schedules tasks.
+Spark supports various cluster managers, including Standalone, Apache Mesos, and Hadoop YARN.
+Worker Nodes:
+
+Worker nodes are the machines in the cluster that execute the tasks assigned by the driver.
+Each worker node runs an executor, which is responsible for executing tasks and storing data.
+Executors:
+
+Executors are distributed agents that run on worker nodes.
+They execute tasks and keep data in memory or disk storage.
+Executors communicate with the driver program to report the status of tasks.
+Tasks:
+
+Tasks are the smallest units of work in Spark.
+Each task is a part of a stage, and stages are parts of the job.
+Tasks are executed by the executors on the worker nodes.
+How Spark Works:
+Job Submission: The driver program submits a job to the SparkContext.
+DAG Creation: The SparkContext converts the user code into a DAG of stages.
+Task Scheduling: The DAG is divided into tasks, which are scheduled by the cluster manager.
+Task Execution: Executors on the worker nodes execute the tasks.
+Result Collection: The results of the tasks are collected and sent back to the driver program.
+This architecture allows Spark to efficiently process large-scale data in a distributed environment, providing high performance and scalability.
+
+15. Explain architecture of MongoDB.
+MongoDB Architecture
+MongoDB is a NoSQL database designed for high performance, high availability, and easy scalability. Its architecture is built around several core components that enable it to handle modern application demands efficiently.
+
+Key Components of MongoDB Architecture:
+Document Data Model:
+
+Documents: MongoDB stores data in flexible, JSON-like documents. Each document contains key-value pairs, allowing for complex data structures and nested documents.
+Collections: Documents are grouped into collections, which are analogous to tables in relational databases. Collections do not enforce a schema, providing flexibility in data modeling.
+Distributed Systems Design:
+
+Sharding: MongoDB supports horizontal scaling through sharding, which distributes data across multiple servers. Each shard holds a subset of the data, and together they form a single logical database.
+Replication: MongoDB ensures high availability through replica sets. A replica set consists of multiple copies of the data, with one primary node and multiple secondary nodes. The primary node handles write operations, while secondary nodes replicate data from the primary and can serve read operations.
+Query Model:
+
+Rich Query Language: MongoDB provides a powerful query language that supports CRUD operations, aggregation, text search, and geospatial queries.
+Indexes: MongoDB supports various types of indexes, including single field, compound, multi-key, text, and geospatial indexes, to optimize query performance.
+Storage Engine:
+
+WiredTiger: The default storage engine in MongoDB, WiredTiger, provides high performance and concurrency. It supports compression and in-memory storage for faster data access.
+MMAPv1: An older storage engine that uses memory-mapped files. It is less efficient than WiredTiger and is deprecated in newer versions of MongoDB.
+Aggregation Framework:
+
+Pipeline: MongoDB's aggregation framework allows for data processing and transformation using a pipeline of stages. Each stage performs an operation on the input documents and passes the results to the next stage.
+Operators: The framework includes a variety of operators for filtering, grouping, sorting, and reshaping data.
+Security:
+
+Authentication: MongoDB supports various authentication mechanisms, including SCRAM, LDAP, and x.509 certificates.
+Authorization: Role-based access control (RBAC) allows for fine-grained control over database operations.
+Encryption: MongoDB provides encryption at rest and in transit to protect data.
+How MongoDB Works:
+Data Ingestion: Data is ingested into MongoDB as documents, which are stored in collections.
+Sharding and Replication: Data is distributed across shards for horizontal scaling and replicated across replica sets for high availability.
+Query Execution: Queries are executed using MongoDB's rich query language, leveraging indexes for efficient data retrieval.
+Aggregation: Data can be processed and transformed using the aggregation framework, enabling complex analytics and reporting.
+MongoDB's architecture allows it to handle a wide range of use cases, from simple CRUD operations to complex data processing and analytics, making it a versatile choice for modern applications12.
+
+
+
+
+
+
+
+16. Write a note on types of NoSQL databases.
+
+
+
+NoSQL databases are designed to handle large volumes of unstructured or semi-structured data, offering flexibility, scalability, and high performance. There are several types of NoSQL databases, each suited to different use cases and data models. Here are the main types:
+
+1. Document Databases
+Description: Store data in JSON-like documents, which can contain nested structures and arrays.
+Use Case: Ideal for content management systems, e-commerce applications, and any scenario where data structures can vary.
+Example: MongoDB, CouchDB.
+2. Key-Value Stores
+Description: Store data as key-value pairs, where each key is unique and maps to a value.
+Use Case: Suitable for caching, session management, and real-time analytics.
+Example: Redis, DynamoDB.
+3. Column-Family Stores
+Description: Store data in columns rather than rows, allowing for efficient storage and retrieval of sparse data.
+Use Case: Best for time-series data, data warehousing, and large-scale distributed systems.
+Example: Apache Cassandra, HBase.
+4. Graph Databases
+Description: Store data in nodes, edges, and properties, representing relationships between entities.
+Use Case: Ideal for social networks, recommendation engines, and fraud detection.
+Example: Neo4j, Amazon Neptune.
+Brief Explanation of Document Databases:
+Document Databases store data in flexible, JSON-like documents. Each document can have a different structure, allowing for a high degree of flexibility in data modeling. This makes document databases particularly well-suited for applications where the data schema can evolve over time.
+
+Key Features:
+Schema Flexibility: Documents can have varying structures, making it easy to adapt to changing requirements.
+Nested Data: Documents can contain nested structures and arrays, allowing for complex data representations.
+Rich Query Language: Support for powerful query languages that can filter, sort, and aggregate data.
+Example:
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "address": {
+    "street": "123 Main St",
+    "city": "Anytown",
+    "state": "CA"
+  },
+  "orders": [
+    {"order_id": 1, "product": "Laptop", "quantity": 1},
+    {"order_id": 2, "product": "Mouse", "quantity": 2}
+  ]
+}
+In this example, a document represents a user with nested address and orders information, showcasing the flexibility and richness of the document model.
+
+
+
+
+17. List the differences between SQL and NoSQL..
+Sure! Here are some key differences between SQL and NoSQL databases:
+
+### SQL Databases
+
+1. **Data Model**:
+   - **Structured**: SQL databases use a structured data model with tables, rows, and columns.
+   - **Schema**: Enforce a fixed schema, meaning the structure of the data must be defined before data can be inserted.
+
+2. **Query Language**:
+   - **SQL (Structured Query Language)**: Use SQL for defining and manipulating data. SQL is a powerful and standardized language for querying relational databases.
+
+3. **Scalability**:
+   - **Vertical Scaling**: Typically scale vertically by adding more resources (CPU, RAM) to a single server.
+
+4. **Transactions**:
+   - **ACID Compliance**: Ensure strong consistency and support ACID (Atomicity, Consistency, Isolation, Durability) transactions.
+
+5. **Examples**:
+   - MySQL, PostgreSQL, Oracle, Microsoft SQL Server.
+
+### NoSQL Databases
+
+1. **Data Model**:
+   - **Flexible**: NoSQL databases use various data models, including document, key-value, column-family, and graph.
+   - **Schema-less**: Do not enforce a fixed schema, allowing for flexible and dynamic data structures.
+
+2. **Query Language**:
+   - **Varied**: Use different query languages depending on the type of NoSQL database. For example, MongoDB uses a JSON-like query language, while Cassandra uses CQL (Cassandra Query Language).
+
+3. **Scalability**:
+   - **Horizontal Scaling**: Typically scale horizontally by adding more servers to the cluster.
+
+4. **Transactions**:
+   - **Eventual Consistency**: Often prioritize availability and partition tolerance, allowing for eventual consistency. Some NoSQL databases support ACID transactions at the document or partition level.
+
+5. **Examples**:
+   - MongoDB, Cassandra, Redis, Neo4j.
+
+### Summary of Differences:
+
+| Feature           | SQL Databases                     | NoSQL Databases                    |
+|-------------------|-----------------------------------|------------------------------------|
+| Data Model        | Structured (tables, rows, columns)| Flexible (document, key-value, etc.)|
+| Schema            | Fixed schema                      | Schema-less                        |
+| Query Language    | SQL                               | Varied (JSON-like, CQL, etc.)      |
+| Scalability       | Vertical Scaling                  | Horizontal Scaling                 |
+| Transactions      | ACID Compliance                   | Eventual Consistency               |
+| Examples          | MySQL, PostgreSQL, Oracle         | MongoDB, Cassandra, Redis          |
+
+If you have any more questions or need further details, feel free to ask!
+
+
+
+
+
+
+18. What is Kafka? Briefly explain the following 4 Kafka terminologies.
+(i) Kafka Broker, (ii) Kafka Topic, (iii) Partitions and (iv) Replication
+
+### What is Kafka?
+
+**Apache Kafka** is an open-source distributed event streaming platform used for building real-time data pipelines and streaming applications. It was originally developed by LinkedIn and later open-sourced as part of the Apache Software Foundation. Kafka is designed to handle high-throughput, low-latency data streams and is widely used for data integration, stream processing, and pub/sub messaging[1](https://developer.confluent.io/what-is-apache-kafka/)[2](https://en.wikipedia.org/wiki/Apache_Kafka).
+
+### Kafka Terminologies
+
+#### (i) Kafka Broker
+A **Kafka Broker** is a server that runs the Kafka software and is responsible for receiving, storing, and serving data. Brokers handle client requests for producing and consuming messages. Each Kafka cluster consists of multiple brokers to ensure fault tolerance and scalability. Brokers manage data and metadata separately, with the data plane handling client requests and the control plane managing metadata[3](https://developer.confluent.io/courses/architecture/broker/)[4](https://learn.conduktor.io/kafka/kafka-brokers/).
+
+#### (ii) Kafka Topic
+A **Kafka Topic** is a logical channel to which producers send messages and from which consumers read messages. Topics are used to organize and categorize data streams. Each topic is divided into partitions, which allows for parallel processing and scalability. Topics are durable log files that keep events in the order they occur, and events are immutable once added to a topic[5](https://www.baeldung.com/kafka-topics-partitions)[6](https://developer.confluent.io/courses/apache-kafka/topics/).
+
+#### (iii) Partitions
+**Partitions** are sub-divisions of a Kafka topic. Each partition is an ordered, immutable sequence of records that is continually appended to—a structured commit log. Partitions allow Kafka to scale horizontally by distributing data across multiple brokers. Within a partition, messages are strictly ordered by their offsets, but there is no guarantee of order across different partitions[5](https://www.baeldung.com/kafka-topics-partitions)[7](https://www.datacamp.com/tutorial/kafka-partitions).
+
+#### (iv) Replication
+**Replication** in Kafka involves duplicating the data of each partition across multiple brokers. This ensures fault tolerance and high availability. Each partition has one leader and zero or more followers. The leader handles all read and write requests, while followers replicate the leader's data. If the leader fails, one of the followers is promoted to leader to ensure continuous availability[8](https://docs.confluent.io/kafka/design/replication.html)[9](https://hevodata.com/learn/kafka-replication/).
+
+If you have any more questions or need further details, feel free to ask!
+
+[1](https://developer.confluent.io/what-is-apache-kafka/): [Confluent - What is Kafka?](https://developer.confluent.io/what-is-apache-kafka/)
+[2](https://en.wikipedia.org/wiki/Apache_Kafka): [Wikipedia - Apache Kafka](https://en.wikipedia.org/wiki/Apache_Kafka)
+[3](https://developer.confluent.io/courses/architecture/broker/): [Confluent - Kafka Broker](https://developer.confluent.io/courses/architecture/broker/)
+[4](https://learn.conduktor.io/kafka/kafka-brokers/): [Conduktor - Kafka Brokers](https://learn.conduktor.io/kafka/kafka-brokers/)
+[5](https://www.baeldung.com/kafka-topics-partitions): [Baeldung - Kafka Topics and Partitions](https://www.baeldung.com/kafka-topics-partitions)
+[6](https://developer.confluent.io/courses/apache-kafka/topics/): [Confluent - Kafka Topics](https://developer.confluent.io/courses/apache-kafka/topics/)
+[8](https://docs.confluent.io/kafka/design/replication.html): [Confluent - Kafka Replication](https://docs.confluent.io/kafka/design/replication.html)
+[9](https://hevodata.com/learn/kafka-replication/): [Hevo Data - Kafka Replication](https://hevodata.com/learn/kafka-replication/)
+[7](https://www.datacamp.com/tutorial/kafka-partitions): [DataCamp - Kafka Partitions](https://www.datacamp.com/tutorial/kafka-partitions)
+
+
+19. What are the main features of Apache Kafka that make it a popular choice for real-time 
+data streaming?
+Apache Kafka is a popular choice for real-time data streaming due to its robust features and capabilities. Here are some of the main features that make Kafka stand out:
+
+1. **High Throughput**:
+   - Kafka can handle large volumes of data with low latency, making it suitable for high-throughput use cases. Its distributed architecture allows it to process millions of messages per second[1](https://www.projectpro.io/article/kafka-for-real-time-streaming/916).
+
+2. **Scalability**:
+   - Kafka is designed to scale horizontally by adding more brokers and partitions. This ensures that the system can handle increasing workloads without a complete overhaul[2](https://broscorp.net/real-time-data-streaming/).
+
+3. **Fault Tolerance**:
+   - Kafka ensures high availability and fault tolerance through replication. Each partition can be replicated across multiple brokers, ensuring that data is not lost even if a broker fails[2](https://broscorp.net/real-time-data-streaming/).
+
+4. **Durability**:
+   - Kafka stores data on disk and replicates it across multiple brokers, ensuring that data is durable and can be recovered in case of failures[1](https://www.projectpro.io/article/kafka-for-real-time-streaming/916).
+
+5. **Real-time Processing**:
+   - Kafka supports real-time data processing, allowing applications to process and react to data as it flows in. This is crucial for use cases like monitoring, analytics, and event-driven architectures[2](https://broscorp.net/real-time-data-streaming/).
+
+6. **Stream Processing**:
+   - Kafka provides a powerful stream processing API called Kafka Streams, which allows developers to build real-time applications that process and analyze data stored in Kafka[3](https://www.confluent.io/learn/kafka-streams/).
+
+7. **Integration**:
+   - Kafka integrates seamlessly with various data sources and sinks, including databases, file systems, and data warehouses. Kafka Connect, a component of Kafka, provides pre-built connectors for easy integration[1](https://www.projectpro.io/article/kafka-for-real-time-streaming/916).
+
+8. **Message Ordering**:
+   - Kafka maintains the order of messages within a partition, ensuring that consumers receive messages in the same order they were produced[2](https://broscorp.net/real-time-data-streaming/).
+
+9. **Multi-subscriber Support**:
+   - Kafka's publish-subscribe model allows multiple consumers to subscribe to the same topic and process data concurrently, enabling parallel processing and load balancing[2](https://broscorp.net/real-time-data-streaming/).
+
+These features make Apache Kafka a powerful and versatile platform for real-time data streaming, capable of handling a wide range of use cases and providing reliable, scalable, and efficient data processing[1](https://www.projectpro.io/article/kafka-for-real-time-streaming/916)[2](https://broscorp.net/real-time-data-streaming/)[3](https://www.confluent.io/learn/kafka-streams/).
+
+If you have any more questions or need further details, feel free to ask!
+
+[1](https://www.projectpro.io/article/kafka-for-real-time-streaming/916): [ProjectPro - Kafka for Real-Time Streaming](https://www.projectpro.io/article/kafka-for-real-time-streaming/916)
+[2](https://broscorp.net/real-time-data-streaming/): [Broscorp - Real-time Data Streaming using Kafka](https://broscorp.net/real-time-data-streaming/)
+[3](https://www.confluent.io/learn/kafka-streams/): [Confluent - Kafka Streams](https://www.confluent.io/learn/kafka-streams/)
+
+20. Explain fault tolerance and durability in Kafka.
+### Fault Tolerance in Kafka
+
+**Fault tolerance** in Kafka refers to the system's ability to continue operating correctly even in the presence of failures. Kafka achieves fault tolerance through several mechanisms:
+
+1. **Replication**:
+   - Each partition in a Kafka topic is replicated across multiple brokers. This ensures that if one broker fails, the data is still available on other brokers.
+   - Each partition has one leader and multiple followers. The leader handles all read and write requests, while followers replicate the leader's data. If the leader fails, one of the followers is promoted to leader[1](https://www.ksolves.com/blog/big-data/apache-kafka/fault-tolerance-and-resiliency-in-apache-kafka)[2](https://reintech.io/blog/fault-tolerance-in-kafka-node-failure-handling).
+
+2. **In-Sync Replicas (ISR)**:
+   - Kafka maintains a list of in-sync replicas (ISR) for each partition. These are replicas that are fully caught up with the leader.
+   - Only the replicas in the ISR are eligible to be promoted to leader in case of a failure, ensuring that no data is lost[1](https://www.ksolves.com/blog/big-data/apache-kafka/fault-tolerance-and-resiliency-in-apache-kafka).
+
+3. **Automatic Failover**:
+   - Kafka automatically detects broker failures and triggers a failover process to promote a new leader from the ISR. This ensures minimal disruption and high availability[1](https://www.ksolves.com/blog/big-data/apache-kafka/fault-tolerance-and-resiliency-in-apache-kafka).
+
+### Durability in Kafka
+
+**Durability** in Kafka ensures that once data is written to Kafka, it is not lost, even in the event of failures. Kafka achieves durability through the following mechanisms:
+
+1. **Replication**:
+   - As mentioned earlier, data is replicated across multiple brokers. This replication ensures that data is durable and can survive broker failures[3](https://developer.confluent.io/courses/architecture/guarantees/).
+
+2. **Acknowledgments (acks)**:
+   - Kafka producers can configure the level of acknowledgment they require from the brokers before considering a write successful.
+   - `acks=0`: The producer does not wait for any acknowledgment from the broker. This provides the lowest latency but no durability guarantees.
+   - `acks=1`: The producer waits for an acknowledgment from the leader broker. This provides moderate durability.
+   - `acks=all` (or `acks=-1`): The producer waits for acknowledgments from all in-sync replicas. This provides the highest level of durability[3](https://developer.confluent.io/courses/architecture/guarantees/)[4](https://docs.confluent.io/cloud/current/client-apps/optimizing/durability.html).
+
+3. **Min In-Sync Replicas (min.insync.replicas)**:
+   - This configuration ensures that a minimum number of replicas must acknowledge a write for it to be considered successful. This setting works in conjunction with the `acks` configuration to enforce durability guarantees[3](https://developer.confluent.io/courses/architecture/guarantees/).
+
+4. **Log Retention**:
+   - Kafka retains logs for a configurable period or until they reach a certain size. This ensures that data is available for a specified duration, even if it is no longer needed for immediate processing[3](https://developer.confluent.io/courses/architecture/guarantees/).
+
+These features make Kafka a robust and reliable platform for real-time data streaming, ensuring that data is both fault-tolerant and durable[1](https://www.ksolves.com/blog/big-data/apache-kafka/fault-tolerance-and-resiliency-in-apache-kafka)[3](https://developer.confluent.io/courses/architecture/guarantees/)[4](https://docs.confluent.io/cloud/current/client-apps/optimizing/durability.html).
+
+If you have any more questions or need further details, feel free to ask!
+
+[1](https://www.ksolves.com/blog/big-data/apache-kafka/fault-tolerance-and-resiliency-in-apache-kafka): [Ksolves - Fault Tolerance and Resiliency in Apache Kafka](https://www.ksolves.com/blog/big-data/apache-kafka/fault-tolerance-and-resiliency-in-apache-kafka)
+[2](https://reintech.io/blog/fault-tolerance-in-kafka-node-failure-handling): [Reintech - Fault Tolerance in Kafka](https://reintech.io/blog/fault-tolerance-in-kafka-node-failure-handling)
+[3](https://developer.confluent.io/courses/architecture/guarantees/): [Confluent - Configuring Durability, Availability, and Ordering Guarantees](https://developer.confluent.io/courses/architecture/guarantees/)
+[4](https://docs.confluent.io/cloud/current/client-apps/optimizing/durability.html): [Confluent - Optimize Confluent Cloud Clients for Durability](https://docs.confluent.io/cloud/current/client-apps/optimizing/durability.html)
+
+
+21. List any 5 differences between batch and stream processing
+Sure! Here are five key differences between batch processing and stream processing:
+
+### 1. Data Ingestion
+- **Batch Processing**: Processes large volumes of data at once, typically at scheduled intervals (e.g., hourly, daily).
+- **Stream Processing**: Processes data continuously as it arrives, in real-time or near real-time.
+
+### 2. Latency
+- **Batch Processing**: Higher latency, as data is collected over a period and then processed in bulk.
+- **Stream Processing**: Lower latency, as data is processed immediately upon arrival.
+
+### 3. Use Cases
+- **Batch Processing**: Suitable for use cases where real-time processing is not required, such as end-of-day reporting, data warehousing, and ETL (Extract, Transform, Load) jobs.
+- **Stream Processing**: Ideal for use cases requiring real-time insights and actions, such as fraud detection, real-time analytics, and monitoring systems.
+
+### 4. Data Size
+- **Batch Processing**: Typically handles large volumes of data in each batch, which can be processed in parallel.
+- **Stream Processing**: Handles smaller, continuous streams of data, which are processed incrementally.
+
+### 5. Complexity
+- **Batch Processing**: Generally simpler to implement and manage, as it deals with static datasets and predefined schedules.
+- **Stream Processing**: More complex to implement and manage, as it requires handling continuous data flow, state management, and fault tolerance in real-time.
+
+These differences highlight the distinct advantages and use cases for batch and stream processing, allowing organizations to choose the appropriate approach based on their specific requirements.
+
+If you have any more questions or need further details, feel free to ask!
+
+22. List any two benefits and two disadvantages of NoSQL databases.
+
+### Benefits of NoSQL Databases
+
+1. **Scalability**:
+   - **Horizontal Scaling**: NoSQL databases are designed to scale out by adding more servers to the cluster, making it easier to handle large volumes of data and high traffic loads. This is particularly useful for applications that experience rapid growth.
+
+2. **Flexibility**:
+   - **Schema-less Design**: NoSQL databases do not enforce a fixed schema, allowing for dynamic and flexible data models. This makes it easier to accommodate changes in data structures without requiring extensive modifications to the database schema.
+
+### Disadvantages of NoSQL Databases
+
+1. **Consistency**:
+   - **Eventual Consistency**: Many NoSQL databases prioritize availability and partition tolerance over immediate consistency. This means that data may not be immediately consistent across all nodes, which can be a drawback for applications requiring strong consistency guarantees.
+
+2. **Complexity**:
+   - **Lack of Standardization**: NoSQL databases often have their own query languages and data models, which can lead to a steeper learning curve for developers. Additionally, the lack of standardization can make it challenging to migrate between different NoSQL databases.
+
+These benefits and disadvantages highlight the trade-offs involved in choosing NoSQL databases, allowing organizations to make informed decisions based on their specific needs and requirements.
+
+If you have any more questions or need further details, feel free to ask!
+
+
+23. List any four differences between Data Lake and Data Warehouse.
+
+Sure! Here are four key differences between a Data Lake and a Data Warehouse:
+
+### 1. Data Structure
+- **Data Lake**: Stores raw, unprocessed data in its native format, including structured, semi-structured, and unstructured data. This allows for greater flexibility in data storage and processing.
+- **Data Warehouse**: Stores processed and structured data, typically in a tabular format. Data is cleaned, transformed, and organized for specific analytical purposes.
+
+### 2. Schema
+- **Data Lake**: Uses a schema-on-read approach, meaning the schema is applied when the data is read or queried. This allows for more flexible and dynamic data ingestion.
+- **Data Warehouse**: Uses a schema-on-write approach, meaning the schema is defined and enforced when the data is written to the warehouse. This ensures data consistency and integrity.
+
+### 3. Use Cases
+- **Data Lake**: Ideal for data exploration, machine learning, and big data analytics. It supports a wide range of data types and can handle large volumes of data from various sources.
+- **Data Warehouse**: Best suited for business intelligence, reporting, and structured data analysis. It is optimized for complex queries and high-performance analytics.
+
+### 4. Cost
+- **Data Lake**: Generally more cost-effective for storing large volumes of data, as it uses low-cost storage solutions and does not require extensive data processing upfront.
+- **Data Warehouse**: Can be more expensive due to the need for high-performance storage and processing capabilities. The cost is also influenced by the complexity of data transformation and maintenance.
+
+These differences highlight the distinct advantages and use cases for data lakes and data warehouses, allowing organizations to choose the appropriate solution based on their specific data management and analytical needs.
+
+If you have any more questions or need further details, feel free to ask!
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+Write HDFS shell commands for the following.
+1. To print version of installed Hadoop. 
+2. Write command syntax for copying localfile from ‘local_src’ path of the local 
+file system to the Hadoop filesystem path ‘hdfs_path’. 
+3. Write command to list the contents of folder named SampleDir.
+4. Write command for display the content of the ‘sample’ file present inside
+newDataFlair directory of HDFS.
+Sure, here are the HDFS shell commands for your requirements:
+
+1. **To print the version of installed Hadoop:**
+   ```bash
+   hadoop version
+   ```
+
+2. **Command syntax for copying a local file from `local_src` path of the local file system to the Hadoop filesystem path `hdfs_path`:**
+   ```bash
+   hdfs dfs -copyFromLocal local_src hdfs_path
+   ```
+
+3. **Command to list the contents of a folder named `SampleDir`:**
+   ```bash
+   hdfs dfs -ls SampleDir
+   ```
+
+4. **Command to display the content of the `sample` file present inside the `newDataFlair` directory of HDFS:**
+   ```bash
+   hdfs dfs -cat /newDataFlair/sample
+   ```
+
+Feel free to ask if you need any more help with HDFS commands or anything else! 😊
+
+
+Write HDFC shell commands for the following.
+1. To print version of installed Hadoop. 
+2. To Copy file1.txt from folder InputDir to OutputDir as file2.txt. 
+3. To Delete an empty directory named as XYZ. 
+4. To list the contents of folder named SampleDir. 
+5. To fetch the usage instructions/details of mkdir command. 
+Note: Consider InpurDir, OutputDir, XYZ, SampleDir and file.txt are under the 
+present working directory.
+
+Sure, here are the HDFS shell commands for your requirements:
+
+1. **To print the version of installed Hadoop:**
+   ```bash
+   hadoop version
+   ```
+
+2. **To copy `file1.txt` from folder `InputDir` to `OutputDir` as `file2.txt`:**
+   ```bash
+   hdfs dfs -cp InputDir/file1.txt OutputDir/file2.txt
+   ```
+
+3. **To delete an empty directory named `XYZ`:**
+   ```bash
+   hdfs dfs -rmdir XYZ
+   ```
+
+4. **To list the contents of a folder named `SampleDir`:**
+   ```bash
+   hdfs dfs -ls SampleDir
+   ```
+
+5. **To fetch the usage instructions/details of the `mkdir` command:**
+   ```bash
+   hdfs dfs -mkdir --help
+   ```
+
+If you have any more questions or need further assistance, feel free to ask! 😊
+
+
+
+
+Write HDFS shell commands for the following.
+1. How do you create a new directory in HDFS with its parent directories (if they 
+don’t exist)
+2. How do you upload multiple files from the local system to a directory in HDFS?
+3. How do you display the contents of a file in HDFS line by line (paged view)?
+4. How do you list all files and directories in HDFS with detailed information?
+5. How do you delete a directory and its contents in HDFS?
+
+Sure, here are the HDFS shell commands for your requirements:
+
+1. **To create a new directory in HDFS with its parent directories (if they don’t exist):**
+   ```bash
+   hdfs dfs -mkdir -p /path/to/new/directory
+   ```
+
+2. **To upload multiple files from the local system to a directory in HDFS:**
+   ```bash
+   hdfs dfs -put /local/path/to/files/* /hdfs/path/to/directory/
+   ```
+
+3. **To display the contents of a file in HDFS line by line (paged view):**
+   ```bash
+   hdfs dfs -cat /hdfs/path/to/file | less
+   ```
+
+4. **To list all files and directories in HDFS with detailed information:**
+   ```bash
+   hdfs dfs -ls -R /
+   ```
+
+5. **To delete a directory and its contents in HDFS:**
+   ```bash
+   hdfs dfs -rm -r /path/to/directory
+   ```
+
+If you have any more questions or need further assistance, feel free to ask! 😊
+
+Write HDFC shell commands for the following.
+1. To print version of installed Hadoop. 
+2. To list the files and directories present in a HDFS path
+3. To copy local file named file1 of the present working directory (pwd) of local 
+file system to the Hadoop file system under root.
+4. To copy the ‘testfile’ of the Hadoop filesystem (present under root) to the local 
+file system (pwd).
+5. Write command to display the content of the ‘sample’ file present inside 
+‘newDataFlair’ directory of HDFS.
+
+Sure, here are the HDFS shell commands for your requirements:
+
+1. **To print the version of installed Hadoop:**
+   ```bash
+   hadoop version
+   ```
+
+2. **To list the files and directories present in an HDFS path:**
+   ```bash
+   hdfs dfs -ls /path/to/directory
+   ```
+
+3. **To copy a local file named `file1` from the present working directory (pwd) of the local file system to the Hadoop file system under root:**
+   ```bash
+   hdfs dfs -copyFromLocal file1 /
+   ```
+
+4. **To copy the `testfile` from the Hadoop filesystem (present under root) to the local file system (pwd):**
+   ```bash
+   hdfs dfs -copyToLocal /testfile .
+   ```
+
+5. **To display the content of the `sample` file present inside the `newDataFlair` directory of HDFS:**
+   ```bash
+   hdfs dfs -cat /newDataFlair/sample
+   ```
+
+If you have any more questions or need further assistance, feel free to ask! 😊
+
+
+
+Write Spark RDD commands for the following. 
+1. To load the given list into a spark RDD, list1 = [10, 20, 30, 40, 50].
+2. Display all elements of the list.
+3. Display sum of all elements of the list.
+4. Display maximum value of the list.
+5. Display minimum value of the list.
+6. Display mean value of the elements of list.
+7. Display standard deviation of elements,
+8. Display variance of elements.
+
+Sure, here are the Spark RDD commands for your requirements:
+
+1. **To load the given list into a Spark RDD:**
+   ```python
+   list1 = [10, 20, 30, 40, 50]
+   rdd = sc.parallelize(list1)
+   ```
+
+2. **To display all elements of the list:**
+   ```python
+   rdd.collect()
+   ```
+
+3. **To display the sum of all elements of the list:**
+   ```python
+   rdd.sum()
+   ```
+
+4. **To display the maximum value of the list:**
+   ```python
+   rdd.max()
+   ```
+
+5. **To display the minimum value of the list:**
+   ```python
+   rdd.min()
+   ```
+
+6. **To display the mean value of the elements of the list:**
+   ```python
+   rdd.mean()
+   ```
+
+7. **To display the standard deviation of elements:**
+   ```python
+   rdd.stdev()
+   ```
+
+8. **To display the variance of elements:**
+   ```python
+   rdd.variance()
+   ```
+
+If you have any more questions or need further assistance, feel free to ask! 😊
+
+
+Write Spark RDD commands for the following.
+1. Create an RDD from the list: List (1, 2, 3, 4, 5, 6)
+2. Display/print first four elements of the RDD.
+3. Display/print first element of the RDD.
+4. Display/print the number of elements in the RDD.
+5. Display sum of all elements of the RDD.
+6. Display maximum value of the RDD.
+7. Display minimum value of the RDD.
+8. Display variance of elements of RDD.
+
+Sure, here are the Spark RDD commands for your requirements:
+
+1. **Create an RDD from the list: List (1, 2, 3, 4, 5, 6):**
+   ```python
+   rdd = sc.parallelize([1, 2, 3, 4, 5, 6])
+   ```
+
+2. **Display/print the first four elements of the RDD:**
+   ```python
+   rdd.take(4)
+   ```
+
+3. **Display/print the first element of the RDD:**
+   ```python
+   rdd.first()
+   ```
+
+4. **Display/print the number of elements in the RDD:**
+   ```python
+   rdd.count()
+   ```
+
+5. **Display the sum of all elements of the RDD:**
+   ```python
+   rdd.sum()
+   ```
+
+6. **Display the maximum value of the RDD:**
+   ```python
+   rdd.max()
+   ```
+
+7. **Display the minimum value of the RDD:**
+   ```python
+   rdd.min()
+   ```
+
+8. **Display the variance of elements of the RDD:**
+   ```python
+   rdd.variance()
+   ```
+
+If you have any more questions or need further assistance, feel free to ask! 😊
+
+
+Write a Spark program pseudo-code to load a text file named as text.txt into Spark
+RDD and compute its wordcount
+
+Sure! Here's a pseudo-code for a Spark program to load a text file named `text.txt` into an RDD and compute its word count:
+
+```python
+# Initialize SparkContext
+sc = SparkContext("local", "WordCountApp")
+
+# Load the text file into an RDD
+text_file = sc.textFile("path/to/text.txt")
+
+# Split each line into words
+words = text_file.flatMap(lambda line: line.split(" "))
+
+# Map each word to a (word, 1) pair
+word_pairs = words.map(lambda word: (word, 1))
+
+# Reduce by key to count occurrences of each word
+word_counts = word_pairs.reduceByKey(lambda a, b: a + b)
+
+# Collect the results and print
+for word, count in word_counts.collect():
+    print(f"{word}: {count}")
+
+# Stop the SparkContext
+sc.stop()
+```
+
+This pseudo-code outlines the steps to load a text file, split it into words, map each word to a pair, reduce by key to count occurrences, and finally print the results. If you have any more questions or need further assistance, feel free to ask!
+
+
+Write below queries in Hive;
+1. Write hive query to create databases name: anotherDB. 
+2. Write hive query to CREATE EXTERNAL TABLE in anotherDB name itorders1 with order_id, order_date, order_customer_id and order_status as 
+columns
+3. Write hive query to load data in orders1 table using file which is available in local 
+file system. 
+
+Sure! Here are the Hive queries for your requirements:
+
+1. **To create a database named `anotherDB`:**
+   ```sql
+   CREATE DATABASE anotherDB;
+   ```
+
+2. **To create an external table in `anotherDB` named `orders1` with `order_id`, `order_date`, `order_customer_id`, and `order_status` as columns:**
+   ```sql
+   USE anotherDB;
+
+   CREATE EXTERNAL TABLE orders1 (
+       order_id INT,
+       order_date STRING,
+       order_customer_id INT,
+       order_status STRING
+   )
+   ROW FORMAT DELIMITED
+   FIELDS TERMINATED BY ','
+   STORED AS TEXTFILE;
+   ```
+
+3. **To load data into the `orders1` table using a file available in the local file system:**
+   ```sql
+   LOAD DATA LOCAL INPATH '/path/to/local/file' INTO TABLE orders1;
+   ```
+
+If you have any more questions or need further assistance, feel free to ask! 😊
+
+Write below queries in Hive;
+1. Write hive query to create databases name: emp.
+2. Write hive query to CREATE EXTERNAL TABLE in emp name it - employee
+with emp_id, name, location, dep, designation and salary as columns
+3. Write hive query to print average salary of employees based on location.
+Sure! Here are the Hive queries for your requirements:
+
+1. **To create a database named `emp`:**
+   ```sql
+   CREATE DATABASE emp;
+   ```
+
+2. **To create an external table in `emp` named `employee` with `emp_id`, `name`, `location`, `dep`, `designation`, and `salary` as columns:**
+   ```sql
+   USE emp;
+
+   CREATE EXTERNAL TABLE employee (
+       emp_id INT,
+       name STRING,
+       location STRING,
+       dep STRING,
+       designation STRING,
+       salary FLOAT
+   )
+   ROW FORMAT DELIMITED
+   FIELDS TERMINATED BY ','
+   STORED AS TEXTFILE;
+   ```
+
+3. **To print the average salary of employees based on location:**
+   ```sql
+   SELECT location, AVG(salary) AS average_salary
+   FROM employee
+   GROUP BY location;
+   ```
+
+If you have any more questions or need further assistance, feel free to ask! 😊
+
+
+
+Two hive tables are shown below. Write a hive query to perform an inner join on 
+the Table1 and Table 2 on ‘Id’ column. Also, write the expected output of your 
+inner join query
+
+Got it! Here's the Hive query to perform an inner join on `Table1` and `Table2` on the `Id` column, along with the expected output:
+
+**Hive Query:**
+```sql
+SELECT t1.Id, t1.Name, t2.NAme
+FROM Table1 t1
+INNER JOIN Table2 t2
+ON t1.Id = t2.Id;
+```
+
+**Expected Output:**
+| Id | Name | NAme |
+|----|------|------|
+| 1  | Alice| tie  |
+| 2  | Bob  | coat |
+
+This query joins `Table1` and `Table2` on the `Id` column and returns the rows where there is a match in both tables. The expected output includes only the rows with matching `Id` values.
+
+If you have any more questions or need further assistance, feel free to ask! 😊
+
+
+
+
+
+
+Write commands/query in MongoDB to,
+1. Create a collection named orders. 
+2. Insert below record in orders. 
+{"order_id”: 1,
+"order_date”: '2013-07-25 00:00:00.0',
+"order_customer_id”: 11599,
+"order_status”: "CLOSED"}
+3. Fetch orders with order_status as COMPLETE. 
+4. Compute count of orders with status COMPLETE and CLOSED
+
+Sure! Here are the MongoDB commands/queries for your requirements:
+
+1. **To create a collection named `orders`:**
+   ```javascript
+   db.createCollection("orders")
+   ```
+
+2. **To insert the given record into the `orders` collection:**
+   ```javascript
+   db.orders.insertOne({
+       "order_id": 1,
+       "order_date": "2013-07-25 00:00:00.0",
+       "order_customer_id": 11599,
+       "order_status": "CLOSED"
+   })
+   ```
+
+3. **To fetch orders with `order_status` as `COMPLETE`:**
+   ```javascript
+   db.orders.find({ "order_status": "COMPLETE" })
+   ```
+
+4. **To compute the count of orders with status `COMPLETE` and `CLOSED`:**
+   ```javascript
+   db.orders.countDocuments({ "order_status": { $in: ["COMPLETE", "CLOSED"] } })
+   ```
+
+If you have any more questions or need further assistance, feel free to ask! 😊
+
+
+
+Write commands / query in Mongo DB
+1. Create a collection named users. 
+2. Insert below records in users. 
+{name: Abhishek}, {name: Raja, age: 24}, {name: Ravi, age: 34}, {name: Ram, 
+age: 45}, {name: Roopa, age: 44}, {name: Tina, age: 54}
+3. Fetch users with age greater than or equal to 34. 
+4. Update record {name: Abhishek} with age 34. 
+5. Delete the record {name: Ravi }
+
+
+Sure! Here are the MongoDB commands/queries for your requirements:
+
+1. **To create a collection named `users`:**
+   ```javascript
+   db.createCollection("users")
+   ```
+
+2. **To insert the given records into the `users` collection:**
+   ```javascript
+   db.users.insertMany([
+       { name: "Abhishek" },
+       { name: "Raja", age: 24 },
+       { name: "Ravi", age: 34 },
+       { name: "Ram", age: 45 },
+       { name: "Roopa", age: 44 },
+       { name: "Tina", age: 54 }
+   ])
+   ```
+
+3. **To fetch users with age greater than or equal to 34:**
+   ```javascript
+   db.users.find({ age: { $gte: 34 } })
+   ```
+
+4. **To update the record `{name: Abhishek}` with age 34:**
+   ```javascript
+   db.users.updateOne(
+       { name: "Abhishek" },
+       { $set: { age: 34 } }
+   )
+   ```
+
+5. **To delete the record `{name: Ravi}`:**
+   ```javascript
+   db.users.deleteOne({ name: "Ravi" })
+   ```
+
+If you have any more questions or need further assistance, feel free to ask! 😊
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------
+
+
+Sure! Here are the steps to process the Bangalore Housing Dataset using PySpark, Spark-SQL, and Spark ML libraries:
+
+### a) Using PySpark and Spark-SQL libraries
+
+1. **Count the total number of housing-properties listed from 'HSR Layout' location:**
+   ```python
+   from pyspark.sql import SparkSession
+
+   # Initialize Spark session
+   spark = SparkSession.builder.appName("BangaloreHousing").getOrCreate()
+
+   # Load the dataset
+   df = spark.read.csv("path/to/bangalore_housing.csv", header=True, inferSchema=True)
+
+   # Register DataFrame as a temporary view
+   df.createOrReplaceTempView("housing")
+
+   # Query to count properties in 'HSR Layout'
+   hsr_count = spark.sql("SELECT COUNT(*) FROM housing WHERE location = 'HSR Layout'")
+   hsr_count.show()
+   ```
+
+2. **Count the number of ‘2 BHK’ size housing-properties listed from 'Whitefield' location:**
+   ```python
+   whitefield_2bhk_count = spark.sql("SELECT COUNT(*) FROM housing WHERE location = 'Whitefield' AND size = '2 BHK'")
+   whitefield_2bhk_count.show()
+   ```
+
+3. **Calculate the average price of ‘2 BHK’ size housing-properties in ‘HSR Layout’ location:**
+   ```python
+   hsr_2bhk_avg_price = spark.sql("SELECT AVG(price) FROM housing WHERE location = 'HSR Layout' AND size = '2 BHK'")
+   hsr_2bhk_avg_price.show()
+   ```
+
+### b) Using Spark ML
+
+1. **Remove features with more than one third of their entries as missing/null and remove rows with remaining missing values:**
+   ```python
+   from pyspark.sql.functions import col
+
+   # Calculate threshold for missing values
+   threshold = df.count() / 3
+
+   # Remove columns with more than one third missing values
+   df = df.dropna(thresh=threshold)
+
+   # Remove rows with any remaining missing values
+   df = df.dropna()
+   ```
+
+2. **Convert all string columns into numeric values using StringIndexer:**
+   ```python
+   from pyspark.ml.feature import StringIndexer
+
+   string_columns = [col for col, dtype in df.dtypes if dtype == 'string']
+
+   for column in string_columns:
+       indexer = StringIndexer(inputCol=column, outputCol=column + "_indexed")
+       df = indexer.fit(df).transform(df)
+       df = df.drop(column).withColumnRenamed(column + "_indexed", column)
+   ```
+
+3. **Combine all columns (except target column 'price') into a single column using VectorAssembler:**
+   ```python
+   from pyspark.ml.feature import VectorAssembler
+
+   feature_columns = [col for col in df.columns if col != 'price']
+   assembler = VectorAssembler(inputCols=feature_columns, outputCol="features")
+   df = assembler.transform(df).select("features", "price")
+   ```
+
+4. **Split the DataFrame into training and test sets:**
+   ```python
+   train_df, test_df = df.randomSplit([0.75, 0.25], seed=42)
+   ```
+
+5. **Train a default LinearRegression model and measure RMSE on the test set:**
+   ```python
+   from pyspark.ml.regression import LinearRegression
+   from pyspark.ml.evaluation import RegressionEvaluator
+
+   lr = LinearRegression(featuresCol="features", labelCol="price")
+   lr_model = lr.fit(train_df)
+   lr_predictions = lr_model.transform(test_df)
+
+   evaluator = RegressionEvaluator(labelCol="price", predictionCol="prediction", metricName="rmse")
+   lr_rmse = evaluator.evaluate(lr_predictions)
+   print(f"Linear Regression RMSE: {lr_rmse}")
+   ```
+
+6. **Train a default Factorization Machines Regressor model and measure RMSE on the test set:**
+   ```python
+   from pyspark.ml.regression import FMRegressor
+
+   fm = FMRegressor(featuresCol="features", labelCol="price")
+   fm_model = fm.fit(train_df)
+   fm_predictions = fm_model.transform(test_df)
+
+   fm_rmse = evaluator.evaluate(fm_predictions)
+   print(f"Factorization Machines Regressor RMSE: {fm_rmse}")
+   ```
+
+7. **Compare the performance of LinearRegression and Factorization Machines Regressor models:**
+   ```python
+   if lr_rmse < fm_rmse:
+       print("Linear Regression performs better.")
+   else:
+       print("Factorization Machines Regressor performs better.")
+   ```
+
+If you have any more questions or need further assistance, feel free to ask! 😊
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+The employee details dataset is provided and loaded as Spark-DataFrame, Using 
+Spark libraries execute the steps, as questioned below.
+a)
+Using PySpark DataFrame and Spark-SQL libraries process the DataFrame to 
+find out solutions of queries mentioned below.
+1. What is the average salary of the employees in the dataset?
+2. What is the total number of years of experience for all employees?
+3. What is the gender distribution in the DataFrame?
+4. What is the salary of the employee with the maximum experience?
+5. How many employees are older than 22 years?
+6. Remove the feature ‘ID’ and also remove null values from the 
+DataFrame.
+b)
+Using Spark ML execute the steps, as questioned below.
+1. Convert all string columns into numeric values using StringIndexer 
+transformer and make sure now DataFrame does not have any string 
+columns anymore.
+2. Using vectorAssembler combines all columns (except target column i.e., 
+'salary') of spark DataFrame into single column (name as features). Make 
+sure DataFrame now contains only two columns features and salary.
+3. Split the vectorized dataframe into training and test sets with one fourth 
+records being held for testing
+4. Build a LinearRegression model on train set with features as 'featuresCol'
+and ‘salary’ as label
+5. Perform prediction on the testing data and print RMSE, MAE value?
+
+
+Sure! Here are the steps to process the employee details dataset using PySpark DataFrame, Spark-SQL, and Spark ML libraries:
+
+### a) Using PySpark DataFrame and Spark-SQL libraries
+
+1. **What is the average salary of the employees in the dataset?**
+   ```python
+   from pyspark.sql import SparkSession
+
+   # Initialize Spark session
+   spark = SparkSession.builder.appName("EmployeeDetails").getOrCreate()
+
+   # Load the dataset
+   df = spark.read.csv("path/to/employee_details.csv", header=True, inferSchema=True)
+
+   # Calculate average salary
+   avg_salary = df.agg({"salary": "avg"}).collect()[0][0]
+   print(f"Average Salary: {avg_salary}")
+   ```
+
+2. **What is the total number of years of experience for all employees?**
+   ```python
+   total_experience = df.agg({"experience": "sum"}).collect()[0][0]
+   print(f"Total Years of Experience: {total_experience}")
+   ```
+
+3. **What is the gender distribution in the DataFrame?**
+   ```python
+   gender_distribution = df.groupBy("gender").count()
+   gender_distribution.show()
+   ```
+
+4. **What is the salary of the employee with the maximum experience?**
+   ```python
+   max_experience_salary = df.orderBy(df.experience.desc()).select("salary").first()[0]
+   print(f"Salary of Employee with Maximum Experience: {max_experience_salary}")
+   ```
+
+5. **How many employees are older than 22 years?**
+   ```python
+   employees_older_than_22 = df.filter(df.age > 22).count()
+   print(f"Number of Employees Older than 22 Years: {employees_older_than_22}")
+   ```
+
+6. **Remove the feature ‘ID’ and also remove null values from the DataFrame:**
+   ```python
+   df = df.drop("ID").dropna()
+   ```
+
+### b) Using Spark ML
+
+1. **Convert all string columns into numeric values using StringIndexer:**
+   ```python
+   from pyspark.ml.feature import StringIndexer
+
+   string_columns = [col for col, dtype in df.dtypes if dtype == 'string']
+
+   for column in string_columns:
+       indexer = StringIndexer(inputCol=column, outputCol=column + "_indexed")
+       df = indexer.fit(df).transform(df)
+       df = df.drop(column).withColumnRenamed(column + "_indexed", column)
+   ```
+
+2. **Combine all columns (except target column 'salary') into a single column using VectorAssembler:**
+   ```python
+   from pyspark.ml.feature import VectorAssembler
+
+   feature_columns = [col for col in df.columns if col != 'salary']
+   assembler = VectorAssembler(inputCols=feature_columns, outputCol="features")
+   df = assembler.transform(df).select("features", "salary")
+   ```
+
+3. **Split the DataFrame into training and test sets:**
+   ```python
+   train_df, test_df = df.randomSplit([0.75, 0.25], seed=42)
+   ```
+
+4. **Build a LinearRegression model on the train set:**
+   ```python
+   from pyspark.ml.regression import LinearRegression
+
+   lr = LinearRegression(featuresCol="features", labelCol="salary")
+   lr_model = lr.fit(train_df)
+   ```
+
+5. **Perform prediction on the testing data and print RMSE, MAE values:**
+   ```python
+   from pyspark.ml.evaluation import RegressionEvaluator
+
+   lr_predictions = lr_model.transform(test_df)
+
+   evaluator_rmse = RegressionEvaluator(labelCol="salary", predictionCol="prediction", metricName="rmse")
+   evaluator_mae = RegressionEvaluator(labelCol="salary", predictionCol="prediction", metricName="mae")
+
+   rmse = evaluator_rmse.evaluate(lr_predictions)
+   mae = evaluator_mae.evaluate(lr_predictions)
+
+   print(f"RMSE: {rmse}")
+   print(f"MAE: {mae}")
+   ```
+
+If you have any more questions or need further assistance, feel free to ask! 😊
+
+
+
+
+
+
+
+
+
+
+
+
+
+Dataset (data_scientist_salaries.csv) is provided and loaded as SparkDataFrame, Using Spark libraries execute the steps, as questioned below.
+a)
+Using PySpark DataFrame and Spark-SQL libraries process the DataFrame to 
+find out solutions of queries mentioned below.
+1. Count the total number of part-time ‘employment_type’ records in the 
+dataset.
+2. What is the average salary in USD (‘salary_in_usd’)?
+3. What is the average salary of ‘Big Data Engineer’ in USD?
+4. What are the types based on ‘company_size’, print the counts of their unique 
+values for each type?
+5. What is the highest mentioned salary where salary currency is INR?
+6. Remove the feature ‘sl_no’ from the DataFrame.
+b)
+Using Spark ML execute the steps, as questioned below.
+1. Convert all string columns into numeric values using StringIndexer 
+transformer and make sure now DataFrame does not have any string 
+columns anymore.
+2. Using vectorAssembler combines all columns (except target column i.e., 
+'salary_in_usd') of spark DataFrame into single column (name as features).
+Make sure DataFrame now contains only two columns features and
+salary_in_usd.
+3. Split the vectorized dataframe into training and test sets with one fourth 
+records being held for testing
+4. Build a LinearRegression model on train set with features as 'featuresCol'
+and ‘salary_in_usd’ as label
+5. Perform prediction on the testing data and print RMSE, MAE value
+
+Sure! Here are the steps to process the `data_scientist_salaries.csv` dataset using PySpark DataFrame, Spark-SQL, and Spark ML libraries:
+
+### a) Using PySpark DataFrame and Spark-SQL libraries
+
+1. **Count the total number of part-time ‘employment_type’ records in the dataset:**
+   ```python
+   from pyspark.sql import SparkSession
+
+   # Initialize Spark session
+   spark = SparkSession.builder.appName("DataScientistSalaries").getOrCreate()
+
+   # Load the dataset
+   df = spark.read.csv("path/to/data_scientist_salaries.csv", header=True, inferSchema=True)
+
+   # Register DataFrame as a temporary view
+   df.createOrReplaceTempView("salaries")
+
+   # Query to count part-time employment_type records
+   part_time_count = spark.sql("SELECT COUNT(*) FROM salaries WHERE employment_type = 'Part-time'")
+   part_time_count.show()
+   ```
+
+2. **What is the average salary in USD (‘salary_in_usd’)?**
+   ```python
+   avg_salary_usd = spark.sql("SELECT AVG(salary_in_usd) FROM salaries")
+   avg_salary_usd.show()
+   ```
+
+3. **What is the average salary of ‘Big Data Engineer’ in USD?**
+   ```python
+   avg_salary_bde = spark.sql("SELECT AVG(salary_in_usd) FROM salaries WHERE job_title = 'Big Data Engineer'")
+   avg_salary_bde.show()
+   ```
+
+4. **What are the types based on ‘company_size’, print the counts of their unique values for each type?**
+   ```python
+   company_size_counts = spark.sql("SELECT company_size, COUNT(*) FROM salaries GROUP BY company_size")
+   company_size_counts.show()
+   ```
+
+5. **What is the highest mentioned salary where salary currency is INR?**
+   ```python
+   highest_salary_inr = spark.sql("SELECT MAX(salary_in_usd) FROM salaries WHERE salary_currency = 'INR'")
+   highest_salary_inr.show()
+   ```
+
+6. **Remove the feature ‘sl_no’ from the DataFrame:**
+   ```python
+   df = df.drop("sl_no")
+   ```
+
+### b) Using Spark ML
+
+1. **Convert all string columns into numeric values using StringIndexer:**
+   ```python
+   from pyspark.ml.feature import StringIndexer
+
+   string_columns = [col for col, dtype in df.dtypes if dtype == 'string']
+
+   for column in string_columns:
+       indexer = StringIndexer(inputCol=column, outputCol=column + "_indexed")
+       df = indexer.fit(df).transform(df)
+       df = df.drop(column).withColumnRenamed(column + "_indexed", column)
+   ```
+
+2. **Combine all columns (except target column 'salary_in_usd') into a single column using VectorAssembler:**
+   ```python
+   from pyspark.ml.feature import VectorAssembler
+
+   feature_columns = [col for col in df.columns if col != 'salary_in_usd']
+   assembler = VectorAssembler(inputCols=feature_columns, outputCol="features")
+   df = assembler.transform(df).select("features", "salary_in_usd")
+   ```
+
+3. **Split the DataFrame into training and test sets:**
+   ```python
+   train_df, test_df = df.randomSplit([0.75, 0.25], seed=42)
+   ```
+
+4. **Build a LinearRegression model on the train set:**
+   ```python
+   from pyspark.ml.regression import LinearRegression
+
+   lr = LinearRegression(featuresCol="features", labelCol="salary_in_usd")
+   lr_model = lr.fit(train_df)
+   ```
+
+5. **Perform prediction on the testing data and print RMSE, MAE values:**
+   ```python
+   from pyspark.ml.evaluation import RegressionEvaluator
+
+   lr_predictions = lr_model.transform(test_df)
+
+   evaluator_rmse = RegressionEvaluator(labelCol="salary_in_usd", predictionCol="prediction", metricName="rmse")
+   evaluator_mae = RegressionEvaluator(labelCol="salary_in_usd", predictionCol="prediction", metricName="mae")
+
+   rmse = evaluator_rmse.evaluate(lr_predictions)
+   mae = evaluator_mae.evaluate(lr_predictions)
+
+   print(f"RMSE: {rmse}")
+   print(f"MAE: {mae}")
+   ```
+
+If you have any more questions or need further assistance, feel free to ask! 😊
+
+
+
+
+
+
+
+
+
+
+
+Time: 2 Hours
+Spark( Pyspark/SparkDf/SparkML) based Notebook (20 marks)
+Execution Environmet : Execute using DataBricks portal (by launching a cluster) or as local notebook if PySpark is installed
+Save -> the 'executed' notebook as .html file and
+Upload ->in the Portal.
+Note: Before uploading submission ensure that notebook cell outputs are clearly visible on the .html file.
+SET - 1
+# import statements
+from pyspark.context import SparkContext
+from pyspark.sql.session import SparkSession
+from pyspark.ml.feature import StringIndexer
+from pyspark.ml.feature import VectorAssembler
+from pyspark.sql.functions import isnull, when, count, col
+from pyspark.ml.evaluation import BinaryClassificationEvaluator
+from pyspark.ml.classification import LogisticRegression
+
+sc = SparkContext.getOrCreate()
+spark = SparkSession(sc)
+
+# Q1. Print Spark version
+print(f"Spark Version: {spark.version}")
+
+# Q2. Read adult_data into a Spark-dataframe
+data_path = 'dbfs:/databricks-datasets/adult/adult.data'
+adult_df = spark.read.csv(data_path, inferSchema=True, header=False)
+
+# Q3. Rename columns of spark dataframe
+column_names = [
+    "age", "workclass", "final_weight", "education", "education_num", "marital_status", "occupation", 
+    "relationship", "race", "sex", "capital_gain", "capital_loss", "hours_per_week", "native_country", "income_class"
+]
+adult_df = adult_df.toDF(*column_names)
+
+# Q4. Check if spark-dataframe has any columns with missing/null values and drop such columns
+null_counts = adult_df.select([count(when(isnull(c), c)).alias(c) for c in adult_df.columns])
+null_counts.show()
+adult_df = adult_df.dropna()
+
+# Q5. Show the datatypes(schema) of each Spark-dataframe columns without using any for loop
+adult_df.printSchema()
+
+# Q6. Convert all string columns of Spark-dataframe into indexes using StringIndexer transformer
+string_columns = [c for c, t in adult_df.dtypes if t == 'string']
+indexers = [StringIndexer(inputCol=col, outputCol=f"{col}_index") for col in string_columns]
+for indexer in indexers:
+    adult_df = indexer.fit(adult_df).transform(adult_df)
+
+# Remove original string columns
+adult_df = adult_df.drop(*string_columns)
+adult_df = adult_df.withColumnRenamed("income_class_index", "label")
+
+# Q7. Using VectorAssembler combines all columns (except label) into single column named features
+feature_columns = [col for col in adult_df.columns if col != "label"]
+assembler = VectorAssembler(inputCols=feature_columns, outputCol="features")
+adult_df = assembler.transform(adult_df).select("features", "label")
+
+# Q8. Split the vectorised spark dataframe into training and test sets
+train_df, test_df = adult_df.randomSplit([0.67, 0.33], seed=42)
+
+# Q9. Train default logistic regression model
+lr = LogisticRegression(featuresCol="features", labelCol="label")
+model = lr.fit(train_df)
+
+# Q10. Find accuracy of logistic regression model on test set
+predictions = model.transform(test_df)
+evaluator = BinaryClassificationEvaluator(labelCol="label", rawPredictionCol="rawPrediction", metricName="areaUnderROC")
+accuracy = evaluator.evaluate(predictions)
+print(f"Test Set Accuracy: {accuracy}")
+SET 2
+# Import required libraries
+from pyspark.context import SparkContext
+from pyspark.sql.session import SparkSession
+from pyspark.sql.functions import col
+from pyspark.ml.feature import StringIndexer, VectorAssembler
+from pyspark.ml.regression import LinearRegression
+from pyspark.ml.evaluation import RegressionEvaluator
+
+# Create Spark session
+sc = SparkContext.getOrCreate()
+spark = SparkSession(sc)
+
+# Load the dataset (modify file_path as required)
+file_path = 'file:///path_to_your/data_scientist_salaries.csv'
+df = spark.read.format("csv").option("header", "True").option("inferSchema", "True").load(file_path)
+
+# Display the schema and initial rows of the dataframe
+df.printSchema()
+df.show(5)
+
+# Q1. Delete the column "sl_no" from the spark dataframe (1 mark)
+df = df.drop("sl_no")
+print("Column 'sl_no' dropped successfully.")
+df.printSchema()
+
+# Q2. Convert all string columns into numeric values using StringIndexer transformer
+# Identify string columns
+string_cols = [field.name for field in df.schema.fields if field.dataType == "StringType"]
+
+# Apply StringIndexer for each string column
+indexers = [StringIndexer(inputCol=col, outputCol=f"{col}_indexed") for col in string_cols]
+
+# Sequentially fit and transform the data
+for indexer in indexers:
+    df = indexer.fit(df).transform(df).drop(indexer.getInputCol())
+
+print("String columns converted to numeric values successfully.")
+df.printSchema()
+
+# Q3. Combine all columns except 'salary_in_usd' into a single column 'features'
+feature_columns = [col for col in df.columns if col != 'salary_in_usd']
+vector_assembler = VectorAssembler(inputCols=feature_columns, outputCol="features")
+df = vector_assembler.transform(df).select("features", "salary_in_usd")
+
+print("DataFrame now contains 'features' and 'salary_in_usd' columns only.")
+df.show(5)
+
+# Q4. Split the vectorized dataframe into training and testing sets
+train_data, test_data = df.randomSplit([0.75, 0.25], seed=42)
+print(f"Training data count: {train_data.count()}, Testing data count: {test_data.count()}")
+
+# Q5. Train a default LinearRegression model
+lr = LinearRegression(featuresCol="features", labelCol="salary_in_usd")
+model = lr.fit(train_data)
+
+print("Linear Regression model trained successfully.")
+
+# Q6. Perform prediction on the testing data and calculate RMSE
+predictions = model.transform(test_data)
+
+# Evaluate the model
+evaluator = RegressionEvaluator(predictionCol="prediction", labelCol="salary_in_usd", metricName="rmse")
+rmse = evaluator.evaluate(predictions)
+print(f"Root Mean Squared Error (RMSE) on test data: {rmse}")
+SET 3
+# Importing necessary modules
+from pyspark.context import SparkContext
+from pyspark.sql.session import SparkSession
+from pyspark.ml.feature import StringIndexer, VectorAssembler, StandardScaler
+from pyspark.ml.classification import DecisionTreeClassifier, RandomForestClassifier
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+from pyspark.sql.functions import col, isnull, when, count
+
+# Initialize SparkContext and SparkSession
+sc = SparkContext.getOrCreate()
+spark = SparkSession(sc)
+
+# Q1: Print Spark Version
+print(f"Spark Version: {spark.version}")
+
+# Q2: Load Dataset into Spark DataFrame
+data_path = 'dbfs:/databricks-datasets/retail/customer_purchases.csv'
+df = spark.read.csv(data_path, header=True, inferSchema=True)
+
+# Q3: Rename Columns
+column_names = ["customer_id", "purchase_amount", "purchase_category", "age", "income", "city", "state", "loyalty_member"]
+df = df.toDF(*column_names)
+
+# Q4: Check and Handle Missing Values
+df = df.na.drop()
+missing_values = df.select([count(when(isnull(c), c)).alias(c) for c in df.columns])
+missing_values.show()
+
+# Q5: Show DataFrame Schema
+df.printSchema()
+
+# Q6: Convert Categorical Columns to Numeric
+categorical_columns = ["purchase_category", "city", "state", "loyalty_member"]
+indexers = [StringIndexer(inputCol=col, outputCol=col + "_index") for col in categorical_columns]
+
+# Apply StringIndexer
+from pyspark.ml import Pipeline
+pipeline = Pipeline(stages=indexers)
+df = pipeline.fit(df).transform(df)
+
+# Drop original string columns
+df = df.drop(*categorical_columns)
+
+# Rename the target column to 'label'
+df = df.withColumnRenamed("loyalty_member_index", "label")
+
+# Q7: Create Features Column
+numeric_columns = [col for col in df.columns if col not in ["customer_id", "label"]]
+assembler = VectorAssembler(inputCols=numeric_columns, outputCol="features")
+df = assembler.transform(df)
+
+# Q8: Split Data into Training and Test Sets
+train_df, test_df = df.randomSplit([0.7, 0.3], seed=42)
+
+# Q9: Train a Decision Tree Classifier
+dt = DecisionTreeClassifier(featuresCol="features", labelCol="label")
+dt_model = dt.fit(train_df)
+
+# Q10: Evaluate Model Accuracy
+predictions = dt_model.transform(test_df)
+evaluator = MulticlassClassificationEvaluator(labelCol="label", predictionCol="prediction", metricName="accuracy")
+accuracy = evaluator.evaluate(predictions)
+print(f"Decision Tree Accuracy: {accuracy}")
+
+# Q11: Perform Feature Scaling
+scaler = StandardScaler(inputCol="features", outputCol="scaledFeatures", withStd=True, withMean=False)
+scaler_model = scaler.fit(df)
+df = scaler_model.transform(df)
+
+# Q12: Train a Random Forest Classifier and Compare
+rf = RandomForestClassifier(featuresCol="features", labelCol="label", numTrees=10)
+rf_model = rf.fit(train_df)
+rf_predictions = rf_model.transform(test_df)
+rf_accuracy = evaluator.evaluate(rf_predictions)
+print(f"Random Forest Accuracy: {rf_accuracy}")
+
+# Q13: Visualize Distribution of Target Labels
+# Export DataFrame to Pandas for visualization
+df_pandas = df.select("label").toPandas()
+import matplotlib.pyplot as plt
+
+df_pandas["label"].value_counts().plot(kind="bar")
+plt.title("Distribution of Target Labels")
+plt.xlabel("Labels")
+plt.ylabel("Count")
+plt.show()
+SET 4
+# Import required libraries
+from pyspark.context import SparkContext
+from pyspark.sql.session import SparkSession
+from pyspark.ml.feature import StringIndexer, VectorAssembler, StandardScaler
+from pyspark.ml.classification import LogisticRegression, GBTClassifier
+from pyspark.ml.evaluation import BinaryClassificationEvaluator
+from pyspark.ml.tuning import ParamGridBuilder, CrossValidator
+
+# Initialize Spark session
+sc = SparkContext.getOrCreate()
+spark = SparkSession(sc)
+
+# Q1. Print Spark version
+print(f"Spark version: {spark.version}")
+
+# Q2. Load Dataset into Spark DataFrame
+data_path = 'dbfs:/databricks-datasets/healthcare/patient_data.csv'
+df = spark.read.csv(data_path, header=True, inferSchema=True)
+
+# Q3. Rename Columns
+column_names = ["patient_id", "age", "gender", "bmi", "diagnosis", "hospital_visits", "medication", "readmitted"]
+df = df.toDF(*column_names)
+
+# Q4. Handle Missing Values
+df = df.dropna()
+
+# Q5. Show DataFrame Schema
+df.printSchema()
+
+# Q6. Convert Categorical Columns to Numeric
+categorical_columns = ["gender", "diagnosis", "medication", "readmitted"]
+indexers = [StringIndexer(inputCol=col, outputCol=f"{col}_index").fit(df) for col in categorical_columns]
+for indexer in indexers:
+    df = indexer.transform(df)
+df = df.drop(*categorical_columns)
+df = df.withColumnRenamed("readmitted_index", "label")
+
+# Q7. Create Features Column
+feature_columns = [col for col in df.columns if col != "label" and col != "patient_id"]
+assembler = VectorAssembler(inputCols=feature_columns, outputCol="features")
+df = assembler.transform(df)
+
+# Q8. Split Data into Training and Test Sets
+train_data, test_data = df.randomSplit([0.75, 0.25], seed=42)
+
+# Q9. Train a Logistic Regression Model
+lr = LogisticRegression(featuresCol="features", labelCol="label")
+lr_model = lr.fit(train_data)
+
+# Q10. Evaluate Model Accuracy
+evaluator = BinaryClassificationEvaluator(labelCol="label", metricName="areaUnderROC")
+lr_accuracy = evaluator.evaluate(lr_model.transform(test_data))
+print(f"Logistic Regression Model Accuracy: {lr_accuracy:.2f}")
+
+# Advanced Tasks
+
+# Q11. Perform Feature Scaling
+scaler = StandardScaler(inputCol="features", outputCol="scaled_features")
+scaler_model = scaler.fit(df)
+df = scaler_model.transform(df)
+
+# Q12. Train a Gradient Boosted Tree Classifier
+gbt = GBTClassifier(featuresCol="scaled_features", labelCol="label", maxIter=10)
+gbt_model = gbt.fit(train_data)
+gbt_accuracy = evaluator.evaluate(gbt_model.transform(test_data))
+print(f"Gradient Boosted Tree Model Accuracy: {gbt_accuracy:.2f}")
+
+# Q13. Visualize the Distribution of Diagnoses
+import pandas as pd
+import matplotlib.pyplot as plt
+
+diagnosis_counts = df.groupBy("diagnosis_index").count().toPandas()
+diagnosis_counts.plot(kind="bar", x="diagnosis_index", y="count", legend=False)
+plt.title("Distribution of Diagnoses")
+plt.xlabel("Diagnosis Index")
+plt.ylabel("Count")
+plt.show()
+
+# Q14. Hyperparameter Tuning for Logistic Regression
+param_grid = ParamGridBuilder() \
+    .addGrid(lr.regParam, [0.01, 0.1, 1.0]) \
+    .addGrid(lr.elasticNetParam, [0.0, 0.5, 1.0]) \
+    .build()
+
+crossval = CrossValidator(estimator=lr,
+                          estimatorParamMaps=param_grid,
+                          evaluator=evaluator,
+                          numFolds=3)
+
+cv_model = crossval.fit(train_data)
+cv_accuracy = evaluator.evaluate(cv_model.transform(test_data))
+print(f"Best Logistic Regression Model Accuracy after Hyperparameter Tuning: {cv_accuracy:.2f}")
+
+# Q15. Feature Importance Analysis
+feature_importances = gbt_model.featureImportances
+importance_df = pd.DataFrame(list(zip(feature_columns, feature_importances)), columns=["Feature", "Importance"])
+importance_df = importance_df.sort_values(by="Importance", ascending=False)
+print("Feature Importances:")
+print(importance_df)
+
+
