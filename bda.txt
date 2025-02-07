@@ -1,0 +1,36 @@
+from langchain.chat_models import ChatOpenAI
+from langchain.schema import SystemMessage, HumanMessage, AIMessage
+import os
+
+def create_chatbot():
+    # Load OpenAI API key from environment variable
+    #openai_api_key = "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"
+    
+    if not openai_api_key:
+        raise ValueError("Please set the OPENAI_API_KEY environment variable.")
+    
+    # Initialize the chat model
+    chat_model = ChatOpenAI(model_name="gpt-3.5-turbo", openai_api_key=openai_api_key)
+    
+    return chat_model
+
+def chat_with_bot(chat_model, user_input):
+    messages = [
+        SystemMessage(content="You are an AI assistant that specializes in answering coding-related questions."),
+        HumanMessage(content=user_input)
+    ]
+    
+    response = chat_model(messages)
+    return response.content
+
+if _name_ == "_main_":
+    chatbot = create_chatbot()
+    
+    print("Coding Chatbot - Ask me coding-related questions!")
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() in ["exit", "quit", "bye"]:
+            print("Chatbot: Goodbye!")
+            break
+        response = chat_with_bot(chatbot, user_input)
+        print(f"Chatbot: {response}")
